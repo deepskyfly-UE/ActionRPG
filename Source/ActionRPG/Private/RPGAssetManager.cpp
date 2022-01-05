@@ -52,7 +52,7 @@ void URPGAssetManager::AssetManagerExample()
 {
 	URPGAssetManager& AssetManager = URPGAssetManager::Get();
 
-	//Get a list of all weapons that can be loaded
+	// Get a list of all weapons that can be loaded
 	TArray<FPrimaryAssetId > WeaponIdList; 	
 	AssetManager.GetPrimaryAssetIdList(WeaponItemType, WeaponIdList);
 	
@@ -79,6 +79,10 @@ void URPGAssetManager::AssetManagerExample()
 	TArray<FPrimaryAssetId > ListOfPrimaryAssetIds;
 	AssetManager.GetPrimaryAssetIdList(SkillItemType, ListOfPrimaryAssetIds);
 
+	// Load a list of items as long as Handle is alive
+	TSharedPtr<FStreamableHandle> Handle = AssetManager.PreloadPrimaryAssets(ListOfPrimaryAssetIds, CurrentLoadState, false);
+
+	// Store Handle somewhere
 }
 
 
