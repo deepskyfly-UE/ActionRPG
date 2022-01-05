@@ -40,5 +40,10 @@ public:
 	 * @param bDisplayWarning If true, this will log a warning if the item failed to load
 	 */
 	URPGItem* ForceLoadItem(const FPrimaryAssetId& PrimaryAssetId, bool bLogWarning = true);
+
+	UFUNCTION(BlueprintCallable)
+	static void AssetManagerExample();
+
+	void CallbackFunction(FPrimaryAssetId WeaponId);
 };
 

@@ -3,6 +3,7 @@
 #include "RPGAssetManager.h"
 #include "Items/RPGItem.h"
 #include "AbilitySystemGlobals.h"
+#include "Items/RPGWeaponItem.h"
 
 const FPrimaryAssetType	URPGAssetManager::PotionItemType = TEXT("Potion");
 const FPrimaryAssetType	URPGAssetManager::SkillItemType = TEXT("Skill");
@@ -45,4 +46,49 @@ URPGItem* URPGAssetManager::ForceLoadItem(const FPrimaryAssetId& PrimaryAssetId,
 	}
 
 	return LoadedItem;
+}
+
+void URPGAssetManager::AssetManagerExample() 
+{
+	URPGAssetManager& AssetManager = URPGAssetManager::Get();
+
+	//Get a list of all weapons that can be loaded
+	TArray<FPrimaryAssetId > WeaponIdList; 	
+	AssetManager.GetPrimaryAssetIdList(WeaponItemType, WeaponIdList);
+	
+	for (const FPrimaryAssetId& WeaponId : WeaponIdList)
+	{
+		// Get tag / value data for an unloaded weapon
+		FAssetData AssetDataToParse;
+		AssetManager.GetPrimaryAssetData(WeaponId, AssetDataToParse);
+
+		FName QueryExample;
+		AssetDataToParse.GetTagValue(GET_MEMBER_NAME_CHECKED(URPGItem, ExampleRegistryTag), QueryExample);
+		UE_LOG(LogTemp, Log, TEXT(" Read Exampleregstry Tag % s from Weapon % s "), *QueryExample.ToString(), *AssetDataToParse.AssetName.ToString());
+
+	}
+
+	// Permanently load a single item
+	TArray < FName > CurrentLoadState;
+	CurrentLoadState.Add(FName("Game"));
+	
+	FName WeaponName = FName("Weapon_Hammer_3");
+	FPrimaryAssetId WeaponId = FPrimaryAssetId(WeaponItemType, WeaponName);
+	AssetManager.LoadPrimaryAsset(WeaponId, CurrentLoadState, FStreamableDelegate::CreateUObject(&AssetManager, &URPGAssetManager::CallbackFunction, WeaponId));
+		
+	TArray<FPrimaryAssetId > ListOfPrimaryAssetIds;
+	AssetManager.GetPrimaryAssetIdList(SkillItemType, ListOfPrimaryAssetIds);
+
+}
+
+
+void URPGAssetManager::CallbackFunction(FPrimaryAssetId WeaponId)
+{
+	URPGWeaponItem* Weapon = GetPrimaryAssetObject< URPGWeaponItem >(WeaponId);
+	if (Weapon) 
+	{
+		UE_LOG(LogTemp, Log, TEXT(" Loaded Weapon % s "), *Weapon->GetName());		
+	}
+	// Release previously loaded item
+	UnloadPrimaryAsset(WeaponId);
 }

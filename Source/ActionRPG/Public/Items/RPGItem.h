@@ -41,6 +41,22 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Item)
 	FSlateBrush ItemIcon;
 
+	//ASSET MANGER EXAMPLE : Detailed preview texture for inventory menu* 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Item, meta = (AssetBundles = "Menu"))
+	TSoftObjectPtr<UTexture> InventoryTexture;
+		
+	//ASSET MANGER EXAMPLE : Sound that only plays in game
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Item, meta = (AssetBundles = "Game"))
+	TSoftObjectPtr<USoundBase> PickupSound;
+
+	//ASSET MANGER EXAMPLE : Item that is linked to this one somehow
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Item)
+	FPrimaryAssetId LinkedItem;
+
+	//ASSET MANGER EXAMPLE : Metadata to read off disk
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Item, AssetRegistrySearchable)
+	FName ExampleRegistryTag;
+
 	/** Price in game */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Item)
 	int32 Price;
